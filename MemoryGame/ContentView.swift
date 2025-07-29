@@ -9,13 +9,14 @@
 import SwiftUI
 
 struct ContentView: View { //this struct behaves like a View
-    //still a variable
+    
+    let emojis = ["⚽️", "🏀",  "🎱", "🏓"]
+//still a variable
     var body: some View {//some view, the type of variable can be any struct, as long as the struct return a some view behaves like view
         HStack{
-            CardView(isFaceUp: true)
-            CardView(isFaceUp: true)
-            CardView(isFaceUp: true)
-            CardView(isFaceUp: true)
+            ForEach(emojis.indices, id: \.self){ index in
+                CardView(content:emojis[index])
+            }
         }
         .foregroundStyle(.green)
         .padding()//a function, view modifier
@@ -23,6 +24,7 @@ struct ContentView: View { //this struct behaves like a View
 }
 
 struct CardView:View{
+    let content:String
     @State var isFaceUp = true //every var
     
     var body:some View {
@@ -31,7 +33,7 @@ struct CardView:View{
             if isFaceUp{
                 base.fill(.white)
                 base.strokeBorder(lineWidth: 5)
-                Text("⚽️").font(.largeTitle)
+                Text(content).font(.largeTitle)
             }else {
                 base.fill()
             }
