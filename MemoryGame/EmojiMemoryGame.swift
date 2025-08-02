@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-
+//class is shared
 class EmojiMemoryGame: ObservableObject {
     private static let emojis = ["⚽️", "🏀",  "🎱", "🏓", "🏊‍♀️", "🛹", "⛳️", "🎣", "🤸", "🥌", "🏆", "🚴"]
     
