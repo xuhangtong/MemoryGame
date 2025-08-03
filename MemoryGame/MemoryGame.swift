@@ -9,15 +9,18 @@ import Foundation
 
 struct MemoryGame <CardContent> where CardContent: Equatable {
     private(set) var cards : Array<Card>
+    private var score:Int
     
     init(numberOfPairsOfCards:Int, cardContentFactory:(Int) -> CardContent){
         cards = []
+        score = 0
         // add of numberOfPairsOfCards x2 cards
         for pairIndex in 0..<max(2,numberOfPairsOfCards){
             let content:CardContent = cardContentFactory(pairIndex)
             cards.append(Card(content: content, id: "\(pairIndex+1)a"))
-            cards.append(Card(content: content, id: "\(pairIndex+2)b"))
+            cards.append(Card(content: content, id: "\(pairIndex+1)b"))
         }
+        shuffle()
     }
     
     var indexOfTheOneAndOnlyCardFaceUpCard: Int? {
@@ -32,20 +35,35 @@ struct MemoryGame <CardContent> where CardContent: Equatable {
                         if cards[potentialMatchIndex].content == cards[choosenIndex].content{
                             cards[potentialMatchIndex].isMatched = true
                             cards[choosenIndex].isMatched = true
+                            score += 2
+                        }else{
+                            if !cards[choosenIndex].hasBeenSeen{
+                                cards[choosenIndex].hasBeenSeen = true
+                            }else{
+                                score -= 1
+                            }
                         }
                 }else {
                     for index in cards.indices{
                         cards[index].isFaceUp = false
                     }
                 }
+                
+                
                 cards[choosenIndex].isFaceUp = true
+                cards[choosenIndex].hasBeenSeen = true
             }
         }
+        print(score)
     }
     
     mutating func shuffle(){
         cards.shuffle()
-        print(cards)
+        //print(cards)
+    }
+    
+    func getScore() -> String{
+        return String(score)
     }
     
     struct Card: Equatable, Identifiable, CustomDebugStringConvertible{
@@ -53,6 +71,7 @@ struct MemoryGame <CardContent> where CardContent: Equatable {
             "\(id): \(content) \(isFaceUp ? "up" : "down")\(isMatched ? " matched" : "")"
         }
         
+        var hasBeenSeen = false
         var isFaceUp  = false
         var isMatched  = false
         let content : CardContent
